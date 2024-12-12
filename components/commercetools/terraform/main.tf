@@ -20,9 +20,9 @@ provider "azurerm" {
   tenant_id       = var.azure_tenant_id
 }
 
-resource "commercetools_project_settings" "project" {
-  name       = "MACH Project ${upper(var.environment)}"
-  countries  = ["GB", "US"]
-  currencies = ["GBP", "USD"]
-  languages  = ["en-GB", "en-US"]
-}
+# resource "commercetools_project_settings" "project" {
+#   name       = "MACH Project ${upper(var.environment)}"
+#   countries  = ["GB", "US"]
+#   currencies = ["GBP", "USD"]
+#   languages  = ["en-GB", "en-US"]
+# }
