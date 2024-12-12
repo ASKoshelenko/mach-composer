@@ -1,0 +1,254 @@
+---
+mach_composer:
+  version: 1
+  plugins:
+    azure:
+      source: mach-composer/azure-minimal
+      version: 0.1.2
+    commercetools:
+      source: mach-composer/commercetools
+      version: 0.2.1
+global:
+  environment: ${var.environment}
+  terraform_config:
+    remote_state:
+      plugin: azure
+      resource_group: ${var.azure_remote_state.resource_group}
+      storage_account: ${var.azure_remote_state.storage_account}
+      container_name: ${var.azure_remote_state.container_name}
+      state_folder: ${var.environment}
+    providers:
+      azure: 4.1.0
+      commercetools: 1.15.1
+  cloud: azure
+  azure:
+    tenant_id: ${var.azure.tenant_id}
+    subscription_id: ${var.azure.subscription_id}
+    resource_tags:
+      Environment: ${var.environment}
+      app: SAD
+sites:
+- identifier: ${var.environment}_site
+  azure:
+    resource_prefix: ${var.azure.resources_prefix}
+    resource_group: ${var.azure.resource_group}
+  commercetools:
+    project_key: ${var.site.commercetools.project_key}
+    client_id: ${var.site.commercetools.client_id}
+    client_secret: ${var.site.commercetools.client_secret}
+    scopes: ${var.site.commercetools.scopes}
+    frontend:
+      create_credentials: false
+  components:
+    - name: ct-setup
+      variables:
+        commercetools_project_key: ${var.site.commercetools.project_key}
+        moduslink_order_sb_connection_string: ${var.site.commercetools.moduslink_order_sb_connection_string}
+        environment_code: ${var.environment_code}
+        key_vault_resource_group_name: ${var.azure.key_vault_resource_group}
+    - name: ct-setup-pro
+      variables:
+        ct_profile: pro
+        commercetools_project_key: ${var.site.commercetools.project_key}
+        environment_code: ${var.environment_code}
+        key_vault_resource_group_name: ${var.azure.key_vault_resource_group}
+        ct_type_express_shipping_cut_off_time_id: ${component.ct-setup.ct_type_express_shipping_cut_off_time_id}
+        ct_poland_shipping_zone_id: ${component.ct-setup.ct_poland_shipping_zone_id}
+        ct_france_shipping_zone_id: ${component.ct-setup.ct_france_shipping_zone_id}
+        ct_hungary_shipping_zone_id: ${component.ct-setup.ct_hungary_shipping_zone_id}
+        ct_turkey_shipping_zone_id: ${component.ct-setup.ct_turkey_shipping_zone_id}
+        ct_india_shipping_zone_id: ${component.ct-setup.ct_india_shipping_zone_id}
+        ct_uk_mainland_shipping_zone_id: ${component.ct-setup.ct_uk_mainland_shipping_zone_id}
+        ct_belgium_shipping_zone_id: ${component.ct-setup.ct_belgium_shipping_zone_id}
+        ct_netherlands_shipping_zone_id: ${component.ct-setup.ct_netherlands_shipping_zone_id}
+        ct_bulgaria_shipping_zone_id: ${component.ct-setup.ct_bulgaria_shipping_zone_id}
+        ct_tax_category_external_shipping_tax_id: ${component.ct-setup.ct_tax_category_external_shipping_tax_id}
+        ct_type_standard_shipping_lead_times_id: ${component.ct-setup.ct_type_standard_shipping_lead_times_id}
+    - name: ct-setup-diy
+      variables:
+        ct_profile: diy
+        commercetools_project_key: ${var.site.commercetools.project_key}
+        environment_code: ${var.environment_code}
+        key_vault_resource_group_name: ${var.azure.key_vault_resource_group}
+        ct_type_express_shipping_cut_off_time_id: ${component.ct-setup.ct_type_express_shipping_cut_off_time_id}
+        ct_tax_category_external_shipping_tax_id: ${component.ct-setup.ct_tax_category_external_shipping_tax_id}
+        ct_type_standard_shipping_lead_times_id: ${component.ct-setup.ct_type_standard_shipping_lead_times_id}
+        ct_czech_republic_shipping_zone_id: ${component.ct-setup.ct_czech_republic_shipping_zone_id}
+        ct_uk_mainland_shipping_zone_id: ${component.ct-setup.ct_uk_mainland_shipping_zone_id}
+        ct_poland_shipping_zone_id: ${component.ct-setup.ct_poland_shipping_zone_id}
+        ct_netherlands_shipping_zone_id: ${component.ct-setup.ct_netherlands_shipping_zone_id}
+        ct_belgium_shipping_zone_id: ${component.ct-setup.ct_belgium_shipping_zone_id}
+        ct_france_shipping_zone_id: ${component.ct-setup.ct_france_shipping_zone_id}
+    - name: promotions
+    - name: commercetools-extensions
+    - name: emails
+      variables:
+        environment_code: ${var.environment_code}
+        key_vault_resource_group_name: ${var.azure.key_vault_resource_group}
+    - name: fi-commerce
+      variables:
+        environment_code: ${var.environment_code}
+        fi_commerce_api_base_url: ${var.fi_commerce.api_base_url}
+        fi_commerce_auth_api_base_url: ${var.fi_commerce.auth_api_base_url}
+        fi_commerce_recurrence_hours: ${var.fi_commerce.recurrence_hours}
+        fi_commerce_recurrence_minutes: ${var.fi_commerce.recurrence_minutes}
+        fi_commerce_orders_window_size: ${var.fi_commerce.orders_window_size}
+      secrets:
+        fi_commerce_auth_client_id: ${var.fi_commerce.auth_client_id}
+        fi_commerce_auth_client_secret: ${var.fi_commerce.auth_client_secret}
+    - name: key-vault-secrets-pro
+      variables:
+        environment_code: ${var.environment_code}
+        key_vault_resource_group_name: ${var.azure.key_vault_resource_group}
+        azure_subscription_id: ${var.azure.subscription_id}
+        ct_profile: pro
+        commercetools_project_key: ${var.site.commercetools.project_key}
+        virtual_bundles_topic_name: ${component.commercetools-extensions.virtual_bundles_topic_name}
+      secrets:
+        fi_commerce_returned_orders_connection_uri: ${component.fi-commerce.fi_commerce_returned_orders_connection_uri}
+        fi_commerce_orders_history_connection_uri: ${component.fi-commerce.fi_commerce_orders_history_connection_uri}
+        fi_commerce_cancelled_orders_connection_uri: ${component.fi-commerce.fi_commerce_cancelled_orders_connection_uri}
+        ct_analytic_service_api_key_client_id: ${component.ct-setup-pro.ct_analytic_service_api_key_client_id}
+        ct_analytic_service_api_key_secret: ${component.ct-setup-pro.ct_analytic_service_api_key_secret}
+        ct_backend_for_frontend_api_key_client_id: ${component.ct-setup-pro.ct_backend_for_frontend_api_key_client_id}
+        ct_backend_for_frontend_api_key_secret: ${component.ct-setup-pro.ct_backend_for_frontend_api_key_secret}
+        ct_discount_service_api_key_client_id: ${component.ct-setup-pro.ct_discount_service_api_key_client_id}
+        ct_discount_service_api_key_secret: ${component.ct-setup-pro.ct_discount_service_api_key_secret}
+        ct_frontend_pro360_api_key_client_id: ${component.ct-setup-pro.ct_frontend_pro360_api_key_client_id}
+        ct_frontend_pro360_api_key_secret: ${component.ct-setup-pro.ct_frontend_pro360_api_key_secret}
+        ct_frontend_api_key_client_id: ${component.ct-setup-pro.ct_frontend_api_key_client_id}
+        ct_frontend_api_key_secret: ${component.ct-setup-pro.ct_frontend_api_key_secret}
+        ct_order_service_api_key_client_id: ${component.ct-setup-pro.ct_order_service_api_key_client_id}
+        ct_order_service_api_key_secret: ${component.ct-setup-pro.ct_order_service_api_key_secret}
+        ct_price_api_api_key_client_id: ${component.ct-setup-pro.ct_price_api_api_key_client_id}
+        ct_price_api_api_key_secret: ${component.ct-setup-pro.ct_price_api_api_key_secret}
+        ct_price_service_api_key_client_id: ${component.ct-setup-pro.ct_price_service_api_key_client_id}
+        ct_price_service_api_key_secret: ${component.ct-setup-pro.ct_price_service_api_key_secret}
+        ct_product_service_api_key_client_id: ${component.ct-setup-pro.ct_product_service_api_key_client_id}
+        ct_product_service_api_key_secret: ${component.ct-setup-pro.ct_product_service_api_key_secret}
+        ct_sap_mc_adapter_api_key_client_id: ${component.ct-setup-pro.ct_sap_mc_adapter_api_key_client_id}
+        ct_sap_mc_adapter_api_key_secret: ${component.ct-setup-pro.ct_sap_mc_adapter_api_key_secret}
+        ct_stock_service_api_key_client_id: ${component.ct-setup-pro.ct_stock_service_api_key_client_id}
+        ct_stock_service_api_key_secret: ${component.ct-setup-pro.ct_stock_service_api_key_secret}
+        ct_tax_service_api_key_client_id: ${component.ct-setup-pro.ct_tax_service_api_key_client_id}
+        ct_tax_service_api_key_secret: ${component.ct-setup-pro.ct_tax_service_api_key_secret}
+        virtual_bundles_sender_connection_string: ${component.commercetools-extensions.virtual_bundles_sender_connection_string}
+        order_and_customer_lifecycle_topic_rcv_connection_string: ${component.emails.order_and_customer_lifecycle_topic_rcv_connection_string}
+        order_and_customer_lifecycle_topic_rcv1_connection_string: ${component.emails.order_and_customer_lifecycle_topic_rcv1_connection_string}
+        sap_mc_adapter_ct_topic_name: ${component.emails.sap_mc_adapter_ct_topic_name}
+        order_service_ct_topic_subscription_name: ${component.emails.order_service_ct_topic_subscription_name}
+        sap_mc_adapter_consent_queue_namespace: ${component.emails.sap_mc_adapter_consent_queue_namespace}
+        sap_mc_adapter_consent_queue_name: ${component.emails.sap_mc_adapter_consent_queue_name}
+        sap_mc_adapter_consent_queue_primary_key: ${component.emails.sap_mc_adapter_consent_queue_primary_key}
+        sap_mc_adapter_consent_queue_sas_policy_name: ${component.emails.sap_mc_adapter_consent_queue_sas_policy_name}
+        sap_mc_adapter_ct_topic_primary_key: ${component.emails.sap_mc_adapter_ct_topic_primary_key}
+        sap_mc_adapter_ct_topic_subscription_name: ${component.emails.sap_mc_adapter_ct_topic_subscription_name}
+        sap_mc_adapter_ct_topic_sas_policy_name: ${component.emails.sap_mc_adapter_ct_topic_sas_policy_name}
+    - name: key-vault-secrets-diy
+      variables:
+        environment_code: ${var.environment_code}
+        key_vault_resource_group_name: ${var.azure.key_vault_resource_group}
+        azure_subscription_id: ${var.azure.subscription_id}
+        ct_profile: diy
+        commercetools_project_key: ${var.site.commercetools.project_key}
+        virtual_bundles_topic_name: ${component.commercetools-extensions.virtual_bundles_topic_name}
+      secrets:
+        ct_analytic_service_api_key_client_id: ${component.ct-setup-diy.ct_analytic_service_api_key_client_id}
+        ct_analytic_service_api_key_secret: ${component.ct-setup-diy.ct_analytic_service_api_key_secret}
+        ct_backend_for_frontend_api_key_client_id: ${component.ct-setup-diy.ct_backend_for_frontend_api_key_client_id}
+        ct_backend_for_frontend_api_key_secret: ${component.ct-setup-diy.ct_backend_for_frontend_api_key_secret}
+        ct_discount_service_api_key_client_id: ${component.ct-setup-diy.ct_discount_service_api_key_client_id}
+        ct_discount_service_api_key_secret: ${component.ct-setup-diy.ct_discount_service_api_key_secret}
+        ct_frontend_api_key_client_id: ${component.ct-setup-diy.ct_frontend_api_key_client_id}
+        ct_frontend_api_key_secret: ${component.ct-setup-diy.ct_frontend_api_key_secret}
+        ct_order_service_api_key_client_id: ${component.ct-setup-diy.ct_order_service_api_key_client_id}
+        ct_order_service_api_key_secret: ${component.ct-setup-diy.ct_order_service_api_key_secret}
+        ct_price_api_api_key_client_id: ${component.ct-setup-diy.ct_price_api_api_key_client_id}
+        ct_price_api_api_key_secret: ${component.ct-setup-diy.ct_price_api_api_key_secret}
+        ct_price_service_api_key_client_id: ${component.ct-setup-diy.ct_price_service_api_key_client_id}
+        ct_price_service_api_key_secret: ${component.ct-setup-diy.ct_price_service_api_key_secret}
+        ct_product_service_api_key_client_id: ${component.ct-setup-diy.ct_product_service_api_key_client_id}
+        ct_product_service_api_key_secret: ${component.ct-setup-diy.ct_product_service_api_key_secret}
+        ct_sap_mc_adapter_api_key_client_id: ${component.ct-setup-diy.ct_sap_mc_adapter_api_key_client_id}
+        ct_sap_mc_adapter_api_key_secret: ${component.ct-setup-diy.ct_sap_mc_adapter_api_key_secret}
+        ct_stock_service_api_key_client_id: ${component.ct-setup-diy.ct_stock_service_api_key_client_id}
+        ct_stock_service_api_key_secret: ${component.ct-setup-diy.ct_stock_service_api_key_secret}
+        ct_tax_service_api_key_client_id: ${component.ct-setup-diy.ct_tax_service_api_key_client_id}
+        ct_tax_service_api_key_secret: ${component.ct-setup-diy.ct_tax_service_api_key_secret}
+        virtual_bundles_sender_connection_string: ${component.commercetools-extensions.virtual_bundles_sender_connection_string}
+        order_and_customer_lifecycle_topic_rcv_connection_string: ${component.emails.order_and_customer_lifecycle_topic_rcv_connection_string}
+        order_and_customer_lifecycle_topic_rcv1_connection_string: ${component.emails.order_and_customer_lifecycle_topic_rcv1_connection_string}
+        sap_mc_adapter_ct_topic_name: ${component.emails.sap_mc_adapter_ct_topic_name}
+        order_service_ct_topic_subscription_name: ${component.emails.order_service_ct_topic_subscription_name}
+        sap_mc_adapter_consent_queue_namespace: ${component.emails.sap_mc_adapter_consent_queue_namespace}
+        sap_mc_adapter_consent_queue_name: ${component.emails.sap_mc_adapter_consent_queue_name}
+        sap_mc_adapter_consent_queue_primary_key: ${component.emails.sap_mc_adapter_consent_queue_primary_key}
+        sap_mc_adapter_consent_queue_sas_policy_name: ${component.emails.sap_mc_adapter_consent_queue_sas_policy_name}
+        sap_mc_adapter_ct_topic_primary_key: ${component.emails.sap_mc_adapter_ct_topic_primary_key}
+        sap_mc_adapter_ct_topic_subscription_name: ${component.emails.sap_mc_adapter_ct_topic_subscription_name}
+        sap_mc_adapter_ct_topic_sas_policy_name: ${component.emails.sap_mc_adapter_ct_topic_sas_policy_name}
+    - name: discount-templates
+      variables:
+        ct_uk_distribution_channel_id: ${component.ct-setup-pro.ct_uk_distribution_channel_id}
+        ct_poland_distribution_channel_id: ${component.ct-setup-pro.ct_poland_distribution_channel_id}
+        ct_france_distribution_channel_id: ${component.ct-setup-pro.ct_france_distribution_channel_id}
+        ct_non_free_gift_cart_discount_id: ${component.ct-setup.ct_non_free_gift_cart_discount_id}
+        ct_set_creator_cart_discount_id: ${component.ct-setup.ct_set_creator_cart_discount_id}
+        discount_templates_product1: ${var.discount_templates.product1}
+        discount_templates_product2: ${var.discount_templates.product2}
+        discount_templates_product3: ${var.discount_templates.product3}
+        discount_templates_category1: ${var.discount_templates.category1}
+        discount_templates_category2: ${var.discount_templates.category2}
+        discount_templates_channels: ${var.discount_templates.channels}
+        discount_templates_employee_group_id: ${var.discount_templates.employee_group_id}
+    - name: event-router
+      variables:
+        moduslink_queue_name: ${var.moduslink.queue_name}
+        moduslink_stores: ${var.moduslink.stores}
+      secrets:
+        moduslink_order_sb_connection_string: ${var.site.commercetools.moduslink_order_sb_connection_string}
+components:
+  - name: ct-setup
+    source: https://git.epam.com/rbo-cct/mach/components/commercetools
+    version: 1.0.9
+    integrations: []
+  - name: ct-setup-pro
+    source: https://git.epam.com/rbo-cct/mach/components/pro/commercetools-pro
+    version: 1.0.0
+    integrations: []
+  - name: ct-setup-diy
+    source: https://git.epam.com/rbo-cct/mach/components/diy/commercetools-diy
+    version: 1.0.5
+    integrations: []
+  - name: promotions
+    source: https://git.epam.com/rbo-cct/mach/components/promotions-subscription
+    version: 1.0.2
+    integrations: []
+  - name: emails
+    source: https://git.epam.com/rbo-cct/mach/components/email-subscription
+    version: 0.0.16
+    integrations: []
+  - name: fi-commerce
+    source: https://git.epam.com/rbo-cct/mach/components/fi-commerce
+    version: 0.0.5
+    integrations: []
+  - name: key-vault-secrets-pro
+    source: https://git.epam.com/rbo-cct/mach/components/pro/key-vault-secrets-pro
+    version: 0.0.8
+    integrations: []
+  - name: key-vault-secrets-diy
+    source: https://git.epam.com/rbo-cct/mach/components/diy/key-vault-secrets-diy
+    version: 0.0.11
+    integrations: []
+  - name: discount-templates
+    source: https://git.epam.com/rbo-cct/mach/components/discount-templates
+    version: 0.0.10
+    integrations: []
+  - name: commercetools-extensions
+    source: https://git.epam.com/rbo-cct/mach/components/commercetools-extensions
+    version: 0.0.4
+    integrations: []
+  - name: event-router
+    source: https://git.epam.com/rbo-cct/mach/components/event-router
+    version: 1.0.8
+    integrations: []
