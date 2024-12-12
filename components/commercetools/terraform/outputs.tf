@@ -1,5 +1,5 @@
 output "project_key" {
-  value = var.ct_project_key
+  value = var.site_commercetools_project_key
 }
 
 output "project_name" {
