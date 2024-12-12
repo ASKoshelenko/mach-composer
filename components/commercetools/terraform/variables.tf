@@ -1,7 +1,7 @@
 variable "environment" {
   description = "Deployment environment"
   type        = string
-  default     = null
+  default     = "dev"
 }
 
 variable "azure_remote_state_resource_group" {
