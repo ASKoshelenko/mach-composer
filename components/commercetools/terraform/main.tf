@@ -1,9 +1,9 @@
 terraform {
   backend "azurerm" {
-    resource_group_name  = var.azure_remote_state_resource_group
-    storage_account_name = var.azure_remote_state_storage_account
-    container_name       = var.azure_remote_state_container_name
-    key                  = "${var.environment}/${var.environment}_site"
+    resource_group_name  = "commercetools.pt-bdo-tp-qa-data" # Статическое значение
+    storage_account_name = "blobptcomtoqa"                   # Статическое значение
+    container_name       = "tf-for-mach"                    # Статическое значение
+    key                  = "dev/dev_site"                   # Статическое значение
   }
 }
 
