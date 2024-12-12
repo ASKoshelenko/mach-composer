@@ -1,0 +1,54 @@
+name: CommercеTools Project Deployment
+
+on:
+  push:
+    branches:
+      - gh_actions
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform-deploy:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_ct_project_key: ${{ secrets.CT_PROJECT_KEY }}
+      TF_VAR_ct_client_id: ${{ secrets.CT_CLIENT_ID }}
+      TF_VAR_ct_client_secret: ${{ secrets.CT_CLIENT_SECRET }}
+      TF_VAR_ct_api_url: ${{ secrets.CT_API_URL }}
+      TF_VAR_ct_auth_url: ${{ secrets.CT_AUTH_URL }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.7
+
+    - name: Terraform Init
+      run: |
+        cd terraform
+        terraform init \
+          -backend-config="key=commercetools-project.tfstate" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT }}" \
+          -backend-config="resource_group_name=${{ secrets.AZURE_RESOURCE_GROUP }}"
+
+    - name: Terraform Validate
+      run: |
+        cd terraform
+        terraform validate
+
+    - name: Terraform Plan
+      run: |
+        cd terraform
+        terraform plan -out=tfplan
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      run: |
+        cd terraform
+        terraform apply -auto-approve tfplan

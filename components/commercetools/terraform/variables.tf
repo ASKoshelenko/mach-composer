@@ -1,57 +1,37 @@
-# tflint-ignore: terraform_unused_declarations
-variable "ct_stores" {
-  type = map(object({
-    key       = string
-    variables = map(string)
-    secrets   = map(string)
-  }))
-  default = {}
-}
-
-# tflint-ignore: terraform_unused_declarations
-variable "component_version" {
+variable "ct_project_key" {
+  description = "CommercеTools Project Key"
   type        = string
-  description = "Version to deploy"
 }
 
-# tflint-ignore: terraform_unused_declarations
-variable "environment" {
+variable "ct_client_id" {
+  description = "CommercеTools Client ID"
   type        = string
-  description = "Specify what environment it's in (e.g. `test` or `production`)"
 }
 
-# tflint-ignore: terraform_unused_declarations
-variable "site" {
+variable "ct_client_secret" {
+  description = "CommercеTools Client Secret"
   type        = string
-  description = "Identifier of the site"
+  sensitive   = true
 }
 
-# tflint-ignore: terraform_unused_declarations
-variable "variables" {
-  type        = any
-  description = "Generic way to pass variables to components."
+variable "ct_scopes" {
+  description = "CommercеTools API Scopes"
+  type        = list(string)
+  default = [
+    "manage_project:dive-into-mach",
+    "manage_products:dive-into-mach",
+    # Добавьте необходимые области
+  ]
 }
 
-# tflint-ignore: terraform_unused_declarations
-variable "secrets" {
-  type        = any
-  description = "Map of secret values. Can be placed in a key vault."
+variable "ct_api_url" {
+  description = "CommercеTools API URL"
+  type        = string
+  default     = "https://api.europe-west1.gcp.commercetools.com"
 }
 
-# tflint-ignore: terraform_unused_declarations
-variable "tags" {
-  type        = map(string)
-  description = "Tags to be used on resources."
-}
-
-# tflint-ignore: terraform_unused_declarations
-variable "azure_monitor_action_group_id" {
-  type    = string
-  default = "Action group ID when alert group is configured."
-}
-
-# tflint-ignore: terraform_unused_declarations
-variable "azure" {
-  type    = map(string)
-  default = {}
+variable "ct_auth_url" {
+  description = "CommercеTools Auth URL"
+  type        = string
+  default     = "https://auth.europe-west1.gcp.commercetools.com"
 }
