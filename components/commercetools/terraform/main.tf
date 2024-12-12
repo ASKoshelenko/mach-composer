@@ -1,17 +1,10 @@
 terraform {
-  required_providers {
-    commercetools = {
-      source  = "labd/commercetools"
-      version = "~> 1.15.0"
-    }
+  backend "azurerm" {
+    resource_group_name  = var.azure_remote_state_resource_group
+    storage_account_name = var.azure_remote_state_storage_account
+    container_name       = var.azure_remote_state_container_name
+    key                  = "${var.environment}/${var.environment}_site"
   }
-}
-
-provider "commercetools" {
-  client_id     = var.site_commercetools_client_id
-  client_secret = var.site_commercetools_client_secret
-  project_key   = var.site_commercetools_project_key
-  api_url       = "https://api.europe-west1.gcp.commercetools.com"
 }
 
 provider "azurerm" {
@@ -20,9 +13,10 @@ provider "azurerm" {
   tenant_id       = var.azure_tenant_id
 }
 
-# resource "commercetools_project_settings" "project" {
-#   name       = "MACH Project ${upper(var.environment)}"
-#   countries  = ["GB", "US"]
-#   currencies = ["GBP", "USD"]
-#   languages  = ["en-GB", "en-US"]
-# }
+provider "commercetools" {
+  client_id     = var.site_commercetools_client_id
+  client_secret = var.site_commercetools_client_secret
+  project_key   = var.site_commercetools_project_key
+  api_url       = var.ct_api_url
+  auth_url      = var.ct_auth_url
+}
