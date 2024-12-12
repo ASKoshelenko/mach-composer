@@ -14,16 +14,6 @@ variable "ct_client_secret" {
   sensitive   = true
 }
 
-variable "ct_scopes" {
-  description = "CommercеTools API Scopes"
-  type        = list(string)
-  default = [
-    "manage_project:dive-into-mach",
-    "manage_products:dive-into-mach",
-    # Добавьте необходимые области
-  ]
-}
-
 variable "ct_api_url" {
   description = "CommercеTools API URL"
   type        = string
@@ -34,4 +24,10 @@ variable "ct_auth_url" {
   description = "CommercеTools Auth URL"
   type        = string
   default     = "https://auth.europe-west1.gcp.commercetools.com"
+}
+
+variable "environment" {
+  description = "Deployment environment"
+  type        = string
+  default     = "development"
 }

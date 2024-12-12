@@ -1,0 +1,50 @@
+name: CommercеTools Project Deployment
+
+on:
+  push:
+    branches:
+      - gh_actions
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./components/commercetools/terraform
+
+    env:
+      TF_VAR_ct_project_key: ${{ secrets.CT_PROJECT_KEY }}
+      TF_VAR_ct_client_id: ${{ secrets.CT_CLIENT_ID }}
+      TF_VAR_ct_client_secret: ${{ secrets.CT_CLIENT_SECRET }}
+      TF_VAR_ct_api_url: ${{ secrets.CT_API_URL }}
+      TF_VAR_ct_auth_url: ${{ secrets.CT_AUTH_URL }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.7
+
+    - name: Terraform Init
+      run: |
+        terraform init
+
+    - name: Terraform Validate
+      run: |
+        terraform validate
+
+    - name: Terraform Plan
+      run: |
+        terraform plan -out=tfplan
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/gh_actions'
+      run: |
+        terraform apply -auto-approve tfplan
