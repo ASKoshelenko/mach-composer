@@ -34,7 +34,7 @@ provider "commercetools" {
 
 # Добавляем новый ресурс после существующей конфигурации провайдеров
 resource "commercetools_api_client" "backend_for_frontend" {
-  name = "backend-for-frontend"
+  name = var.bff_client_name
   scope = [
     "manage_orders:${var.site_commercetools_project_key}",
     "manage_payments:${var.site_commercetools_project_key}",
