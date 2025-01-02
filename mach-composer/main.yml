@@ -39,3 +39,4 @@ sites:
     client_id: "q1kNU9NJdrb3AdZY2F6LtMnY"
     client_secret: "iShMrQqSnBVv0eKclIFXmLYfMVcGJYVY"
     scopes: "manage_order_edits:dive-into-mach manage_customers:dive-into-mach"
+
