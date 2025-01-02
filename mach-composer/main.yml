@@ -20,10 +20,10 @@ global:
       state_folder: "qa"
     providers:
       azure:
-        source: "hashicorp/azurerm"    # Добавляем source
+        source: "hashicorp/azurerm"
         version: "4.14.0"
       commercetools:
-        source: "labd/commercetools"    # Явно указываем правильный source
+        source: "labd/commercetools"
         version: "1.15.1"
 
 sites:
@@ -36,3 +36,5 @@ sites:
     client_id: "q1kNU9NJdrb3AdZY2F6LtMnY"
     client_secret: "iShMrQqSnBVv0eKclIFXmLYfMVcGJYVY"
     scopes: "manage_order_edits:dive-into-mach manage_customers:dive-into-mach"
+    token_url: "https://auth.europe-west1.gcp.commercetools.com"  # Изменено с auth_url на token_url
+    api_url: "https://api.europe-west1.gcp.commercetools.com"
