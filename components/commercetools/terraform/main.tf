@@ -31,3 +31,20 @@ provider "commercetools" {
   api_url       = var.ct_api_url
   token_url     = var.ct_auth_url
 }
+
+# Добавляем новый ресурс после существующей конфигурации провайдеров
+resource "commercetools_api_client" "backend_for_frontend" {
+  name = "backend-for-frontend"
+  scope = [
+    "manage_orders:${var.site_commercetools_project_key}",
+    "manage_payments:${var.site_commercetools_project_key}",
+    "manage_key_value_documents:${var.site_commercetools_project_key}",
+    "manage_customers:${var.site_commercetools_project_key}",
+    "view_published_products:${var.site_commercetools_project_key}",
+    "view_standalone_prices:${var.site_commercetools_project_key}",
+    "view_project_settings:${var.site_commercetools_project_key}"
+  ]
+  lifecycle {
+    prevent_destroy = true
+  }
+}
