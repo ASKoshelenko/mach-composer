@@ -32,7 +32,7 @@ jobs:
       TF_VAR_site_commercetools_project_key: ${{ secrets.CT_PROJECT_KEY }}
       TF_VAR_ct_api_url: ${{ secrets.CT_API_URL }}
       TF_VAR_ct_auth_url: ${{ secrets.CT_AUTH_URL }}
-      TF_VAR_site_commercetools_scopes: "manage_project:dive-into-mach"
+      TF_VAR_site_commercetools_scopes: ${{ secrets.CT_SCOPE }}      
 
     steps:
     - name: Checkout repository
