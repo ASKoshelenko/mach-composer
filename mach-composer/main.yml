@@ -11,7 +11,7 @@ mach_composer:
 
 global:
   cloud: azure
-  environment: qa  # Указываем статический идентификатор окружения
+  environment: dev  # Указываем статический идентификатор окружения
   terraform_config:
     remote_state:
       plugin: azure
