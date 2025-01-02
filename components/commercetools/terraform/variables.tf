@@ -68,7 +68,7 @@ variable "site_commercetools_client_secret" {
 variable "site_commercetools_scopes" {
   description = "Commercetools Scopes"
   type        = string
-  default     = "manage_order_edits:dive-into-mach manage_customers:dive-into-mach"
+  default     = "manage_project:dive-into-mach"
 }
 
 variable "ct_api_url" {

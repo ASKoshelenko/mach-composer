@@ -26,9 +26,9 @@ jobs:
       TF_VAR_site_commercetools_client_id: ${{ secrets.CT_CLIENT_ID }}
       TF_VAR_site_commercetools_client_secret: ${{ secrets.CT_CLIENT_SECRET }}
       TF_VAR_site_commercetools_project_key: ${{ secrets.CT_PROJECT_KEY }}
-      TF_VAR_ct_api_url: "https://api.europe-west1.gcp.commercetools.com"
-      TF_VAR_ct_auth_url: "https://auth.europe-west1.gcp.commercetools.com"
-      TF_VAR_site_commercetools_scopes: "manage_order_edits:dive-into-mach manage_customers:dive-into-mach"
+      TF_VAR_ct_api_url: ${{ secrets.CT_API_URL }}
+      TF_VAR_ct_auth_url: ${{ secrets.CT_AUTH_URL }}
+      TF_VAR_site_commercetools_scopes: "manage_project:dive-into-mach"
 
     steps:
     - name: Checkout repository
@@ -45,18 +45,14 @@ jobs:
         terraform_version: 1.5.7
 
     - name: Terraform Init
-      run: |
-        terraform init
+      run: terraform init
 
     - name: Terraform Validate
-      run: |
-        terraform validate
+      run: terraform validate
 
     - name: Terraform Plan
-      run: |
-        terraform plan -out=tfplan
+      run: terraform plan -out=tfplan
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/gh_actions'
-      run: |
-        terraform apply -auto-approve tfplan
+      run: terraform apply -auto-approve tfplan
