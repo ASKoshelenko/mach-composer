@@ -1,7 +1,7 @@
 terraform {
   backend "azurerm" {
     resource_group_name  = "commercetools.pt-bdo-tp-qa-data" # Статическое значение
-    storage_account_name = "blobptcomtoqa"                   # Статическое значение
+    storage_account_name = "askblobptcomtoqa"                   # Статическое значение
     container_name       = "tf-for-mach"                    # Статическое значение
     key                  = "dev/dev_site"                   # Статическое значение
   }
