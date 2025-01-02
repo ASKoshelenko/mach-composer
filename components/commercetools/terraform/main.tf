@@ -29,5 +29,5 @@ provider "commercetools" {
   project_key   = var.site_commercetools_project_key
   scopes        = var.site_commercetools_scopes
   api_url       = var.ct_api_url
-  auth_url      = var.ct_auth_url
+  token_url     = var.ct_auth_url 
 }
