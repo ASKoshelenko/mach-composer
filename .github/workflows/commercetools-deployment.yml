@@ -17,19 +17,16 @@ jobs:
         working-directory: ./components/commercetools/terraform
 
     env:
-      # Azure переменные
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      # Commercetools переменные
       TF_VAR_site_commercetools_client_id: ${{ secrets.CT_CLIENT_ID }}
       TF_VAR_site_commercetools_client_secret: ${{ secrets.CT_CLIENT_SECRET }}
       TF_VAR_site_commercetools_project_key: ${{ secrets.CT_PROJECT_KEY }}
       TF_VAR_ct_api_url: ${{ secrets.CT_API_URL }}
       TF_VAR_ct_auth_url: ${{ secrets.CT_AUTH_URL }}
       TF_VAR_site_commercetools_scopes: "manage_project:dive-into-mach"
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
