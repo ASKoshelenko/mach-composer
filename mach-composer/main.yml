@@ -1,0 +1,40 @@
+mach_composer:
+  version: 1
+  plugins:
+    azure:
+      source: mach-composer/azure-minimal
+      version: 0.1.2
+    commercetools:
+      source: mach-composer/commercetools
+      version: 0.2.1
+
+global:
+  cloud: azure
+  environment: qa
+  terraform_config:
+    remote_state:
+      plugin: azure
+      resource_group: "commercetools.pt-bdo-tp-qa-data"
+      storage_account: "askblobptcomtoqa"
+      container_name: "tf-for-mach"
+      state_folder: "qa"
+    providers:
+      azure:
+        source: "hashicorp/azurerm"
+        version: "4.14.0"
+      commercetools:
+        source: "labd/commercetools"
+        version: "1.15.1"
+
+sites:
+- identifier: qa_site
+  azure:
+    resource_prefix: "mach"
+    resource_group: "commercetools.pt-bdo-tp-qa-data"
+  commercetools:
+    project_key: "dive-into-mach"
+    client_id: "q1kNU9NJdrb3AdZY2F6LtMnY"
+    client_secret: "iShMrQqSnBVv0eKclIFXmLYfMVcGJYVY"
+    scopes: "manage_order_edits:dive-into-mach manage_customers:dive-into-mach"
+    token_url: "https://auth.europe-west1.gcp.commercetools.com"  # Изменено с auth_url на token_url
+    api_url: "https://api.europe-west1.gcp.commercetools.com"
