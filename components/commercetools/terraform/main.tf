@@ -1,9 +1,19 @@
 terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.14.0"
+    }
+    commercetools = {
+      source  = "labd/commercetools"
+      version = "~> 1.15.1"
+    }
+  }
   backend "azurerm" {
-    resource_group_name  = "commercetools.pt-bdo-tp-qa-data" # Статическое значение
-    storage_account_name = "askblobptcomtoqa"                   # Статическое значение
-    container_name       = "tf-for-mach"                    # Статическое значение
-    key                  = "dev/dev_site"                   # Статическое значение
+    resource_group_name  = "commercetools.pt-bdo-tp-qa-data"
+    storage_account_name = "askblobptcomtoqa"
+    container_name       = "tf-for-mach"
+    key                  = "dev/dev_site"
   }
 }
 
@@ -17,6 +27,7 @@ provider "commercetools" {
   client_id     = var.site_commercetools_client_id
   client_secret = var.site_commercetools_client_secret
   project_key   = var.site_commercetools_project_key
+  scopes        = var.site_commercetools_scopes
   api_url       = var.ct_api_url
   auth_url      = var.ct_auth_url
 }

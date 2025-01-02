@@ -1,4 +1,3 @@
----
 mach_composer:
   version: 1
   plugins:
@@ -11,7 +10,7 @@ mach_composer:
 
 global:
   cloud: azure
-  environment: dev  # Указываем статический идентификатор окружения
+  environment: qa
   terraform_config:
     remote_state:
       plugin: azure
@@ -20,14 +19,12 @@ global:
       container_name: "tf-for-mach"
       state_folder: "qa"
     providers:
-      azure: 4.1.0
-      commercetools: 1.15.1
-  azure:
-    tenant_id: "0557c505-2685-41ca-8c49-9d54834f885c"
-    subscription_id: "e33344af-3118-4989-ad50-2ffdf1cf837f"
-    resource_tags:
-      Environment: qa
-      app: MACH
+      azure:
+        source: "hashicorp/azurerm"    # Добавляем source
+        version: "4.14.0"
+      commercetools:
+        source: "labd/commercetools"    # Явно указываем правильный source
+        version: "1.15.1"
 
 sites:
 - identifier: qa_site
@@ -39,4 +36,3 @@ sites:
     client_id: "q1kNU9NJdrb3AdZY2F6LtMnY"
     client_secret: "iShMrQqSnBVv0eKclIFXmLYfMVcGJYVY"
     scopes: "manage_order_edits:dive-into-mach manage_customers:dive-into-mach"
-    
