@@ -35,6 +35,6 @@ sites:
     project_key: "dive-into-mach"
     client_id: "q1kNU9NJdrb3AdZY2F6LtMnY"
     client_secret: "iShMrQqSnBVv0eKclIFXmLYfMVcGJYVY"
-    scopes: "manage_order_edits:dive-into-mach manage_customers:dive-into-mach"
+    scopes: "manage_order_edits:dive-into-mach manage_customers:dive-into-mach manage_customer_groups:dive-into-mach manage_cart_discounts:dive-into-mach manage_categories:dive-into-mach manage_project:dive-into-mach manage_audit_log:dive-into-mach manage_attribute_groups:dive-into-mach manage_orders:dive-into-mach manage_product_selections:dive-into-mach manage_products:dive-into-mach manage_sessions:dive-into-mach manage_discount_codes:dive-into-mach manage_approval_flows:dive-into-mach manage_checkout_payment_intents:dive-into-mach manage_extensions:dive-into-mach manage_connectors:dive-into-mach view_audit_log:dive-into-mach manage_business_units:dive-into-mach manage_payments:dive-into-mach manage_connectors_deployments:dive-into-mach manage_associate_roles:dive-into-mach manage_api_clients:dive-into-mach view_api_clients:dive-into-mach manage_approval_rules:dive-into-mach manage_import_containers:dive-into-mach manage_checkout_transactions:dive-into-mach"
     token_url: "https://auth.europe-west1.gcp.commercetools.com"  # Изменено с auth_url на token_url
     api_url: "https://api.europe-west1.gcp.commercetools.com"

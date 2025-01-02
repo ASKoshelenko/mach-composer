@@ -82,3 +82,10 @@ variable "ct_auth_url" {
   type        = string
   default     = "https://auth.europe-west1.gcp.commercetools.com"
 }
+
+
+variable "bff_client_name" {
+  description = "Name for Backend-for-Frontend API client"
+  type        = string
+  default     = "backend-for-frontend"
+}
